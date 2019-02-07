@@ -1,0 +1,8 @@
+Power Supply:
+slew 1V/s approx
+current limit to not blow things up
+start with small voltages
+sweep -100 oe to 100 oe back and forth
+
+DAQ:
+figure out pins to use
