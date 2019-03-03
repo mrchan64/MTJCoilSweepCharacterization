@@ -1,0 +1,54 @@
+function showGraph(row, col){
+  var rname = titles[row-1];
+  var cname = 'Sens'+col;
+  var dat = data[row-1][col-1];
+  var r0 = dat.r0;
+  var mr = dat.mr;
+  var r2 = dat.r2;
+  var mrp = dat.mrp;
+  var r0o = dat.r0off;
+  var curve = dat.curve;
+  var titlestr = rname + ' ' + cname + ' | R0: ' + r0/1000 + 'kOhms | MR: ' + mr + 'Ohms/Oe | r^2: ' + r2 + ' | MR%: ' + mrp + '%/Oe | R0 DC Offset: ' + r0o +'%';
+  var docstring = ''
+
+  var trace = {
+    x: fields,
+    y: curve
+  }
+
+  var layout = {
+    title: {
+      text: titlestr,
+      font: {
+        size: 12
+      }
+    },
+    xaxis: {
+      title: {
+        text: 'x Axis',
+        font: {
+          family: 'Courier New, monospace',
+          size: 18,
+          color: '#7f7f7f'
+        }
+      },
+    },
+    yaxis: {
+      text: 'Ohms',
+      font: {
+        size: 12
+      }
+    }
+  }
+
+  var plotly_str = document.getElementById('plotly').innerHTML;
+
+  var nw = window.open('', rname + ' ' + cname, 'width=800,height=800');
+  nw.document.write('<script>'+plotly_str+'</');
+  nw.document.write('script>');
+  nw.document.write('<body style="margin:0;width:100%;height:100%"><div style="margin:0;width:100%;height:100%" id="plot">Loading...</div><script>function doplot(){document.getElementById("plot").innerHTML="";console.log(JSON.stringify(layout));Plotly.newPlot("plot", [trace], layout)}</');
+  nw.document.write('script></body>');
+  nw.trace = trace;
+  nw.layout = layout;
+  setTimeout(()=>{nw.doplot()}, 500);
+}
