@@ -8,6 +8,7 @@ savename_raw_reverse = 'raw_data/MR_Chip2_RB100k_30Oe_neg';
 savename_forward = 'processed_data/MR_Chip2_RB100k_30Oe_pos_processed';
 savename_reverse = 'processed_data/MR_Chip2_RB100k_30Oe_neg_processed';
 
+% target for summary
 savename_processed = 'processed_data/Chip2_Sensor_Summary';
 savename_html = 'html/MR_Chip2'; % Make sure if there is a subdirectory, the folder already exists
 
@@ -16,7 +17,7 @@ saturation_range = 10;    % max Oe to process linear fit to on both sides
 % reorganize_data = false; % if data needs to be reorganized to Matthew's format (should already be done)
 include_raw_in_wrkspace = true;
 reprocess_data = true;  % will rerun process_raw if true
-rewrite_sensor = true;   % will rewrite sensor performance summary file
+rewrite_summary = true;   % will rewrite sensor performance summary file
 rewrite_html = true;    % will rewrite the html table
 % for finding working (overrides working_table parameters)
 r_nom_low = 10e3;
@@ -77,7 +78,6 @@ save(savename_reverse, 'work_r', 'working', '-append');
 
 % get working data
 [Data_working,Pointer_working,R0_working,MR_working]=get_working(savename_forward, savename_reverse, working);
-[R0_all,MR_all,Ros_all]=get_data(savename_forward, savename_reverse);
 
 % rewriting html
 if rewrite_html
@@ -88,92 +88,20 @@ if rewrite_html
   end
 end
 
-% CALCULATION
-% Array 1-7
-for i=1:1:7
-    if sum(working(i,:)) >= 4
-        m=1;
-        for j=1:1:7
-            if working(i,j) == 1
-                R0x(1,m)=R0_all(i,j);
-                MRx(1,m)=MR_all(i,j);
-                Rosx(1,m)=Ros_all(i,j);
-                m=m+1;
-            end    
-        end
-        R0_avg(i,1)=mean(R0x(1,:));
-        R0_std(i,1)=std(R0x(1,:));
-        MR_avg(i,1)=mean(abs(MRx(1,:)));
-        MR_std(i,1)=std(abs(MRx(1,:)));
-        Ros_avg(i,1)=mean(Rosx(1,:));
-        clear R0x MRx Rosx;
-    else
-        R0_avg(i,1)=0;
-        R0_std(i,1)=0;
-        MR_avg(i,1)=0;
-        MR_std(i,1)=0;
-        Ros_avg(i,1)=0;
-    end   
+% generate summary and load summary into struct
+% loaded in as:
+%   T_summ.R0_avg
+%   T_summ.R0_std
+%   T_summ.MR_avg
+%   T_summ.MR_std
+%   T_summ.Ros_avg
+if rewrite_summary
+  generate_summary(savename_forward, savename_reverse, savename_processed, working);
+  T_summ = load(savename_processed);
 end
 
-% Array 8-11
-for i=8:1:11
-    if sum(working(i,:)) >= 2
-        m=1;
-        for j=1:1:4
-            if working(i,j) == 1
-                R0x(1,m)=R0_all(i,j);
-                MRx(1,m)=MR_all(i,j);
-                Rosx(1,m)=Ros_all(i,j);
-                m=m+1;
-            end    
-        end
-        R0_avg(i,1)=mean(R0x(1,:));
-        R0_std(i,1)=std(R0x(1,:));
-        MR_avg(i,1)=mean(abs(MRx(1,:)));
-        MR_std(i,1)=std(abs(MRx(1,:)));
-        Ros_avg(i,1)=mean(Rosx(1,:));
-        clear R0x MRx Rosx;
-    else
-        R0_avg(i,1)=0;
-        R0_std(i,1)=0;
-        MR_avg(i,1)=0;
-        MR_std(i,1)=0;
-        Ros_avg(i,1)=0;
-    end   
-end
+% R0, MR, AND Ro DATA AS MATRIX INSTEAD OF CELLS
+[R0_all, MR_all, Ros_all] = get_data(savename_forward, savename_reverse);
 
-% Plot
-figure;
-subplot(2,1,1);
-hold on;
-box on;
-bar(R0_avg.*1e-3);
-errorbar(R0_avg.*1e-3,R0_std.*1e-3,'.','LineWidth',2);
-xlim([0.5 11.5]);
-xlabel('Sensor Array','FontSize',18);
-ylabel('R0 (kOhm)','FontSize',18);
-set(gca,'FontSize',18);
-subplot(2,1,2);
-bar(Ros_avg.*100);
-xlim([0.5 11.5]);
-xlabel('Sensor Array','FontSize',18);
-ylabel('Offset (%)','FontSize',18);
-set(gca,'FontSize',18);
-set(gcf,'color','w');
-
-figure;
-subplot(2,1,1);
-hold on;
-box on;
-bar(MR_avg.*100);
-errorbar(MR_avg.*100,MR_std.*100,'.','LineWidth',2);
-xlim([0.5 11.5]);
-xlabel('Sensor Array','FontSize',18);
-ylabel('MR (%/Oe)','FontSize',18);
-set(gca,'FontSize',18);
-set(gcf,'color','w');
-
-if rewrite_sensor == 1
-    save(savename_processed,'R0_avg','R0_std','MR_avg','MR_std','Ros_avg');
-end
+% Operations and other calculations can go down here
+% ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
