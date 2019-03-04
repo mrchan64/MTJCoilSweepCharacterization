@@ -1,12 +1,11 @@
 function process_raw(savename, lin_range); % !!!IMPORTANT!!! lin_range is OPTIONAL parameter
   %
   % FUNCTION to process the row_data struct and output
-  % 1. nominal_res    (Nominal Resistance, non-reference {row value}(column value))
-  % 2. ref_nom_r      (Nominal Resistance, reference (row value))
-  % 3. calculated_mr  (MR, non-reference {row value}(column value))
-  % 4. ref_mr         (MR, reference (row value))
-  % 5. mr_r2          (r^2 value, non-reference {row value}(column value))
-  % 6. ref_mr_r2      (r^2 value, reference (row value))
+  % 1. nominal_res    (Nominal Resistance {row value}(column value))
+  % 2. calculated_mr  (MR {row value}(column value))
+  % 3. mr_r2          (r^2 value {row value}(column value))
+  % 4. r_max          (max data val {row value}(column value))
+  % 5. r_min          (min data val {row value}(column value))
   %   I added in a condition to average out the mr values for going in and coming back
   %   and set mr to 0 and r2 to 0 if they are too far apart
   %
@@ -45,6 +44,8 @@ function process_raw(savename, lin_range); % !!!IMPORTANT!!! lin_range is OPTION
   mr_r2 = {};
   mr_perc = {};
   r_off_max = {};
+  r_max = {};
+  r_min = {};
 
   % sweep rows
   counter = 1;
@@ -56,6 +57,8 @@ function process_raw(savename, lin_range); % !!!IMPORTANT!!! lin_range is OPTION
     m_r = [];
     m_p = [];
     r_o = [];
+    r_a = [];
+    r_i = [];
 
     % non-reference
     for i = 1:7
@@ -67,6 +70,8 @@ function process_raw(savename, lin_range); % !!!IMPORTANT!!! lin_range is OPTION
         m_r(end+1) = -1;
         m_p(end+1) = -1;
         r_o(end+1) = -1;
+        r_a(end+1) = -1;
+        r_i(end+1) = -1;
         continue;
       end
 
@@ -99,6 +104,10 @@ function process_raw(savename, lin_range); % !!!IMPORTANT!!! lin_range is OPTION
       % max nominal res offset
       r_o(end+1) = range([curr_dat(1) curr_dat(end)]);
 
+      % maximum and minimum of range of sensor
+      r_a(end+1) = max(curr_dat);
+      r_i(end+1) = min(curr_dat);
+
     end
 
     % change to percentage
@@ -109,12 +118,14 @@ function process_raw(savename, lin_range); % !!!IMPORTANT!!! lin_range is OPTION
     mr_r2{end+1} = m_r;
     mr_perc{end+1} = m_p;
     r_off_max{end+1} = r_o;
+    r_max{end+1} = r_a;
+    r_min{end+1} = r_i;
 
     counter = counter+1;
 
   end
 
-  save(savename, 'field_linear_range', 'nominal_res', 'calculated_mr', 'mr_r2', 'mr_perc', 'r_off_max', '-append')
+  save(savename, 'field_linear_range', 'nominal_res', 'calculated_mr', 'mr_r2', 'mr_perc', 'r_off_max', 'r_max', 'r_min', '-append')
 
   fprintf('Execution time: %.3fs\n', toc);
 

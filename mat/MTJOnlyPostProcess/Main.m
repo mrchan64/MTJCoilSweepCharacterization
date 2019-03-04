@@ -1,16 +1,16 @@
 clear;
 
 % raw data files
-savename_raw_forward = 'raw_data/MR_Chip2_RB100k_30Oe_pos';
-savename_raw_reverse = 'raw_data/MR_Chip2_RB100k_30Oe_neg';
+savename_raw_forward = 'raw_data/MR_Chip10_RB100k_30Oe_pos';
+savename_raw_reverse = 'raw_data/MR_Chip10_RB100k_30Oe_neg';
 
 % target for processed data files
-savename_forward = 'processed_data/MR_Chip2_RB100k_30Oe_pos_processed';
-savename_reverse = 'processed_data/MR_Chip2_RB100k_30Oe_neg_processed';
+savename_forward = 'processed_data/MR_Chip10_RB100k_30Oe_pos_processed';
+savename_reverse = 'processed_data/MR_Chip10_RB100k_30Oe_neg_processed';
 
 % target for summary
-savename_processed = 'processed_data/Chip2_Sensor_Summary';
-savename_html = 'html/MR_Chip2'; % Make sure if there is a subdirectory, the folder already exists
+savename_processed = 'processed_data/Chip10_Sensor_Summary';
+savename_html = 'html/MR_Chip10'; % Make sure if there is a subdirectory, the folder already exists
 
 % PARAMETERS
 saturation_range = 10;    % max Oe to process linear fit to on both sides
@@ -101,7 +101,7 @@ if rewrite_summary
 end
 
 % R0, MR, AND Ro DATA AS MATRIX INSTEAD OF CELLS
-[R0_all, MR_all, Ros_all] = get_data(savename_forward, savename_reverse);
+[R0_all, MR_all, Ros_all, MR_sensor] = get_data(savename_forward, savename_reverse);
 
 % Operations and other calculations can go down here
 % ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓

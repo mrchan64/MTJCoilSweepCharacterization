@@ -3,7 +3,7 @@ function generate_summary(savename_f, savename_r, savename_processed, working)
 	T1 = load(savename_f);
 	T2 = load(savename_r);
 
-	num_arrays = length(T1.row_data)
+	num_arrays = length(T1.row_data);
 
 	R0_avg = zeros(1, num_arrays);
 	R0_std = zeros(1, num_arrays);
