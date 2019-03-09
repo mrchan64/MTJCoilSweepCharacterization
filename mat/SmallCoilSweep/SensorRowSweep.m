@@ -27,8 +27,8 @@ daq_total_time = daq_settle_time + daq_read_time + daq_pad_time;
 daq_samples_per_step = daq_total_time * s.Rate;
 
 conditioning_freq = 100;
-conditioning_field = 20; %Oe
-conditioning_time = 1; %s 
+conditioning_field = 50; %Oe
+conditioning_time = 10; %s 
 
 % data storage
 global data;
@@ -82,14 +82,14 @@ ana_in_b = [ ai1B ai2B ai3B ai4B ai5B ai6B ai7B ];
 % settings: non-differential and -5V to 5V
 counter = 1;
 for ch = ana_in
-	ch.Range = [-5 5];
+	ch.Range = [-10 10];
 	ch.TerminalConfig = 'SingleEnded';
 	fprintf('Channel ai%d configured\n', counter);
 	counter = counter + 1;
 end
 counter = 1;
 for ch = ana_in_b
-	ch.Range = [-5 5];
+	ch.Range = [-10 10];
 	ch.TerminalConfig = 'SingleEnded';
 	fprintf('Channel ai%db configured\n', counter);
 	counter = counter + 1;
@@ -113,7 +113,7 @@ m_time = .1;
 hv = 7.7;
 
 r_nom = 4.75e3; % resistance in current source
-bias_V = .9; % V .7 best?
+bias_V = .7; % V .7 best?
 
 test_volt = fields./hv;
 bias_I = bias_V / r_nom;

@@ -8,11 +8,11 @@ import java.util.Date;
 
 public class SweepAutomaterSmall{
 
-	public static final int SWEEP_START					 = 2;
+	public static final int SWEEP_START					 = 118;
 	public static final int SWEEP_STOP					 = 512;
-	public static final int SWEEP_INT 					 = 20;
+	public static final int SWEEP_INT 					 = 2;
 
-	public static final int SWEEP_TIME_MS 				 = 85000;
+	public static final int SWEEP_TIME_MS 				 = 94000;
 	public static final int SWEEP_TIME_TOLERANCE_MS		 = 2000;
 	public static final int FPGA_PROGRAM_MS				 = 4000;
 	public static final int FPGA_MOD_MS					 = 500;
